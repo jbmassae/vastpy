@@ -22,7 +22,7 @@ SUCCESS_CODES = {http.HTTPStatus.OK,
                  http.HTTPStatus.PARTIAL_CONTENT}
 
 class VASTClient(object):
-    def __init__(self, user=None, password=None, address=None, url='api', cert_file=None, cert_server_name=None, tenant=None, token=None, version=None):
+    def __init__(self, user=None, password=None, address=None, url='api', cert_file=None, cert_server_name=None, tenant=None, token=None, version='latest'):
         self._user = user
         self._password = password
         self._tenant = tenant
@@ -54,7 +54,8 @@ class VASTClient(object):
                               cert_server_name=self._cert_server_name,
                               url=f'{self._url}{version_path}/{part}',
                               tenant=self._tenant,
-                              token=self._token)
+                              token=self._token,
+                              version=None)
 
     def __repr__(self):
         return f'VASTClient(address="{self._address}", url="{self._url}")'
@@ -66,7 +67,7 @@ class VASTClient(object):
             pm = urllib3.PoolManager(cert_reqs='CERT_NONE')
             urllib3.disable_warnings(category=InsecureRequestWarning)
         if self._token:
-            headers = {'authorization': f"'Api-Token {self._token}"}
+            headers = {'authorization': f"Api-Token {self._token}"}
         else:
             headers = urllib3.make_headers(basic_auth=self._user + ':' + self._password)
         if self._tenant:
